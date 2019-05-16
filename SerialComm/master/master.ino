@@ -4,25 +4,26 @@
 //#define CODE_B 0xB0
 //int a = 0;
 //int b = 0;
-String s[] = {"roshan","singh","IT4"};
+String s;
+int count = 0;
 
 void setup() {
   Serial.begin(4800);
-
-if(Serial.availableForWrite()>0){
-
-    Serial.print("$$");
-for (int i = 0;sizeof(s)/sizeof(s[0])>i;i++){
-    Serial.print(s[i]);
-    Serial.print("#");
-}
-
-Serial.flush();
-}
+delay(2000);
+s = String("$${\"tok\":")+String(45)+String("}");
 pinMode(0,INPUT_PULLUP);
 }
 
 void loop() {
 
-delay(1000);
+if(Serial.availableForWrite() > 62 && count< s.length()){
+  Serial.print(s[count]);
+  count++;
+  delay(10);
+}
+if(count>= s.length()){
+  s = String("$${\"tok\":")+String(45+count)+String("}");
+  count = 0;
+  
+}
 }
