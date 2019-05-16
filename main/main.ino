@@ -1,5 +1,6 @@
 #include <ESP8266WiFi.h>
 #include<WiFiUDP.h>
+#include <ESP8266WebServer.h>
 #define DEBUG(x) Serial.println(x);
 #define DEBUG2(x) Serial.print(x);
 
@@ -15,16 +16,29 @@ int timeArray[] = {0,0,0}; // hour,minuit,second
 
 WiFiUDP udp;
 
+ESP8266WebServer server(80);
+
 //######HEADERS####
 void setupWifi();
 void setupUDP();
 void getNTPTime();
+
+void toggleStopWatch();
+long getStopwatch();
+long getStopwatchCount();
+void togglePauseStopwatch();
+//void unSetStopWatch();
+
+int setAlarm(int hh,int mm,bool isAM,bool repeat);
+void unSetAlarm(int);
+
 //#################
 
 void setup() {
 Serial.begin(115200);
 setupWiFi();
 setupUDP();
+setupWebServer();
 
 }
 
@@ -35,6 +49,9 @@ void loop() {
   DEBUG2(timeArray[1])
   DEBUG2(":")
   DEBUG(timeArray[2])
+  
+  server.handleClient();
+  
   delay(10000);
 }
 
@@ -98,9 +115,53 @@ void getNTPTime(){
 //    DEBUG(epoch)
 //    DEBUG2("The UTC time is ")
 //    DEBUG2((epoch  % 86400L) / 3600)
+
     timeArray[0] = (epoch  % 86400L) / 3600; 
     timeArray[1] = (epoch  % 3600) / 60;
     timeArray[2] = epoch % 60;
   }
 
+}
+
+void setupWebSetver(){
+  server.on("/",handleRequest());
+  server.onNotFound([](){
+    server.send(404,"404:Not Found");
+  });
+  server.begin();
+}
+void setupWifi();
+void setupUDP();
+void getNTPTime();
+
+void toggleStopWatch();
+long getStopwatch();
+long getStopwatchCount();
+void togglePauseStopwatch();
+//void unSetStopWatch();
+
+int setAlarm(int hh,int mm,bool isAM,bool repeat);
+void unSetAlarm(int);
+void handleRequest(){
+  if(server.arg("toggleStopWatch") == "1"){
+    
+  }
+  if (server.arg("getStopwatch") == "1"){
+    
+  }
+  if (server.arg("getStopwatchCount") == "1"){
+    
+  }
+  if (server.arg("togglePauseStopwatch") == "1"){
+    
+  }
+  if (server.arg("isPausedStopwatch") == "1"){
+    
+  }
+  if (server.arg("setAlarm") == "1"){
+    
+  }
+  if (server.arg("unSetAlarm") == "1"){
+    
+  }
 }
