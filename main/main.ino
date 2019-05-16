@@ -27,6 +27,7 @@ void toggleStopWatch();
 long getStopwatch();
 long getStopwatchCount();
 void togglePauseStopwatch();
+bool isPausedStopwatch();
 //void unSetStopWatch();
 
 int setAlarm(int hh,int mm,bool isAM,bool repeat);
@@ -134,34 +135,28 @@ void setupWifi();
 void setupUDP();
 void getNTPTime();
 
-void toggleStopWatch();
-long getStopwatch();
-long getStopwatchCount();
-void togglePauseStopwatch();
-//void unSetStopWatch();
-
-int setAlarm(int hh,int mm,bool isAM,bool repeat);
-void unSetAlarm(int);
 void handleRequest(){
   if(server.arg("toggleStopWatch") == "1"){
-    
+    toggleStopWatch();
   }
   if (server.arg("getStopwatch") == "1"){
-    
+    long count = getStopwatch();
   }
   if (server.arg("getStopwatchCount") == "1"){
-    
+    long count = getStopwatchCount();
   }
   if (server.arg("togglePauseStopwatch") == "1"){
-    
+    togglePauseStopwatch();
   }
   if (server.arg("isPausedStopwatch") == "1"){
     
   }
   if (server.arg("setAlarm") == "1"){
-    
+    int count = setAlarm(server.arg("hh"),server.arg("mm"),server.arg("AM"),server.arg("msg"),(server.arg("repeat") == "1")?true:false);
   }
   if (server.arg("unSetAlarm") == "1"){
-    
+    // do something
   }
+
+  //SPIFFS index.html here
 }
