@@ -3,8 +3,8 @@
 #include<WiFiUDP.h>
 #include <ESP8266WebServer.h>
 #include <FS.h>
-#define DEBUG(x) Serial.println(x);
-#define DEBUG2(x) Serial.print(x);
+#define DEBUG(x) //Serial.println(x);
+#define DEBUG2(x) //Serial.print(x);
 
 String ssid = "Redmi1";
 String pass = "12345678";
@@ -173,7 +173,7 @@ DEBUG("hit /")
   }
   if (server.arg("setAlarm") == "1"){
     int count = setAlarm(server.arg("hh"),server.arg("mm"),server.arg("AM"),server.arg("msg"),server.arg("repeat"));
-    Serial.println(server.arg("hh")+server.arg("mm")+server.arg("AM")+server.arg("msg")+server.arg("repeat"));
+//    Serial.println(server.arg("hh")+server.arg("mm")+server.arg("AM")+server.arg("msg")+server.arg("repeat"));
         server.send(200,"text/plain","SA");
 
   }
@@ -190,12 +190,25 @@ DEBUG("hit /")
   
 }
 
-void toggleStopWatch(){}
-long getStopwatch(){}
-long getStopwatchCount(){}
-void togglePauseStopwatch(){}
-bool isPausedStopwatch(){}
-//void unSetStopWatch(){}
+void toggleStopWatch(){
+  Serial.print("A");
+  }
+
+long getStopwatch(){
+  Serial.print("B");
+  return 0L;
+  }
+
+long getStopwatchCount(){}  // redudant
+
+void togglePauseStopwatch(){
+  Serial.print("C");
+  }
+
+bool isPausedStopwatch(){
+  Serial.print("D");
+  return true;
+  }
 
 int setAlarm(String hh,String mm,String isAM,String msg,String repeat){return 0;}
 void unSetAlarm(String b){}

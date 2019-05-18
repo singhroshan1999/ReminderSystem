@@ -33,6 +33,7 @@ toggleStopWatch();
 delay(1000);
 Serial.println(getStopwatch());
 DEB_t = millis();
+pinMode(LED_BUILTIN,OUTPUT);
 //setMemo("1","hello memo!");
 }
 
@@ -98,6 +99,8 @@ void unSetMemo(){
 
 void stopWatchTick(){
 //  Serial.println(stopWatchCount);
+  digitalWrite(LED_BUILTIN,!digitalRead(LED_BUILTIN));
+
   stopWatchCount++;
 }
 
@@ -112,10 +115,13 @@ void displayNotification(String msg){
 }
 
 void serialEvent(){
+  digitalWrite(LED_BUILTIN,!digitalRead(LED_BUILTIN));
 //  char s = (char)Serial.read();
   String st = Serial.readString();
+  Serial.println(st);
   char s = st[0];
   st.remove(0,1);
+  
 //  Serial.println(st);
   if(s == 'A'){
     toggleStopWatch();
