@@ -1,0 +1,57 @@
+<html>
+    <head>
+        <!-- <script src="main.js"></script> -->
+        <script>
+        function ajaxRequest(fn){
+            // alert("1");
+    var ajax = new XMLHttpRequest();
+    ajax.onreadystatechange = function (){
+        // alert("2");
+        if(this.readyState == 4 && this.status == 200){
+            alert(ajax.responseText);
+            document.getElementById("display").innerHTML = ajax.responseText;
+        }
+    };
+ajax.open("GET","/?"+fn,true);
+ajax.send()
+}
+
+function unity(fn){
+ajaxRequest(fn+"=1");
+}
+
+function setAlarm(){
+    var hh = document.getElementById("hour").value;
+    var mm = document.getElementById("minuit").value;
+    var am = document.getElementById("am").checked;
+    var repeat = document.getElementById("repeat").checked;
+    var text = document.getElementById("text").value;
+
+    var req = "setAlarm=1&"+"hh="+hh+"&mm="+mm+"&AM="+am+"&msg="+text+"&repeat="+repeat;
+    // alert(req);
+    ajaxRequest(req);
+}
+        </script>
+    </head>
+    <body>
+        <button onclick="unity('toggleStopWatch')">toggle stopwatch</button><br/>
+        <button onclick="unity('getStopwatch')">get stopwatch</button><br/>
+        <button onclick="unity('getStopwatchCount')">get stopwatch count</button><br/>
+        <button onclick="unity('togglePauseStopwatch')">toggle pause stopwatch</button><br/>
+        <button onclick="unity('isPausedStopwatch')">check stopwatch paused</button><br/>
+
+        <button onclick="unity('togglePauseStopwatch')">toggle pause stopwatch</button><br/>
+        <input id = "hour" type="number" min="0" max="12">
+        <input id = "minuit" type="number" min="0" max="59">
+        <input id = "am" type="checkbox">
+        <input id = "repeat" type="checkbox">
+        <input id = "text" type="text">
+        <input id = "sub" type="button" onclick="setAlarm()" value="setAlarm"></button><br/>
+        
+        <button onclick="unity('unSetAlarm')">un set alarm</button><br/>
+
+
+
+        <p id = "display"></p>
+    </body>
+</html>

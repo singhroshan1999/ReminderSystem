@@ -1,6 +1,8 @@
 #include <ESP8266WiFi.h>
+#include <WiFiClient.h>
 #include<WiFiUDP.h>
 #include <ESP8266WebServer.h>
+#include <FS.h>
 #define DEBUG(x) Serial.println(x);
 #define DEBUG2(x) Serial.print(x);
 
@@ -30,8 +32,8 @@ void togglePauseStopwatch();
 bool isPausedStopwatch();
 //void unSetStopWatch();
 
-int setAlarm(int hh,int mm,bool isAM,bool repeat);
-void unSetAlarm(int);
+int setAlarm(String hh,String mm,String isAM,String msg,String repeat);
+void unSetAlarm(String);
 
 //#################
 
@@ -40,20 +42,22 @@ Serial.begin(115200);
 setupWiFi();
 setupUDP();
 setupWebServer();
+SPIFFS.begin();
+
 
 }
 
 void loop() {
-  getNTPTime();
-  DEBUG2(timeArray[0])
-  DEBUG2(":")
-  DEBUG2(timeArray[1])
-  DEBUG2(":")
-  DEBUG(timeArray[2])
+//  getNTPTime();
+//  DEBUG2(timeArray[0])
+//  DEBUG2(":")
+//  DEBUG2(timeArray[1])
+//  DEBUG2(":")
+//  DEBUG(timeArray[2])
   
   server.handleClient();
   
-  delay(10000);
+//  delay(10000);
 }
 
 void setupWiFi(){
@@ -124,8 +128,13 @@ void getNTPTime(){
 
 }
 
-void setupWebSetver(){
-  server.on("/",handleRequest());
+void setupWebServer(){
+  server.on("/",handleRequest);
+  server.on("/home",[](){
+    File f = SPIFFS.open("/index.html","r");
+    server.send(200,"text/html",f.readString());
+    f.close();
+  });
   server.onNotFound([](){
     server.send(404,"404:Not Found");
   });
@@ -136,27 +145,57 @@ void setupUDP();
 void getNTPTime();
 
 void handleRequest(){
+//  if(server.hasArg("toggleStopWatch")){
+DEBUG("hit /")
   if(server.arg("toggleStopWatch") == "1"){
+    DEBUG("hit togglestopwatch")
     toggleStopWatch();
+    server.send(200,"text/plain","TSW");
   }
   if (server.arg("getStopwatch") == "1"){
     long count = getStopwatch();
+        server.send(200,"text/plain","GSW");
+
   }
   if (server.arg("getStopwatchCount") == "1"){
     long count = getStopwatchCount();
+        server.send(200,"text/plain","GSWC");
+
   }
   if (server.arg("togglePauseStopwatch") == "1"){
     togglePauseStopwatch();
+        server.send(200,"text/plain","TPS");
+
   }
   if (server.arg("isPausedStopwatch") == "1"){
-    
+        server.send(200,"text/plain","IPSW");
+
   }
   if (server.arg("setAlarm") == "1"){
-    int count = setAlarm(server.arg("hh"),server.arg("mm"),server.arg("AM"),server.arg("msg"),(server.arg("repeat") == "1")?true:false);
+    int count = setAlarm(server.arg("hh"),server.arg("mm"),server.arg("AM"),server.arg("msg"),server.arg("repeat"));
+    Serial.println(server.arg("hh")+server.arg("mm")+server.arg("AM")+server.arg("msg")+server.arg("repeat"));
+        server.send(200,"text/plain","SA");
+
   }
   if (server.arg("unSetAlarm") == "1"){
+        server.send(200,"text/plain","USA");
+
     // do something
   }
+//  else {
+    
+//  }
 
   //SPIFFS index.html here
+  
 }
+
+void toggleStopWatch(){}
+long getStopwatch(){}
+long getStopwatchCount(){}
+void togglePauseStopwatch(){}
+bool isPausedStopwatch(){}
+//void unSetStopWatch(){}
+
+int setAlarm(String hh,String mm,String isAM,String msg,String repeat){return 0;}
+void unSetAlarm(String b){}

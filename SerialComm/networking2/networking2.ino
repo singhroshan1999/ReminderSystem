@@ -59,6 +59,7 @@ String getContentType(String filename) { // convert the file extension to the MI
   else if (filename.endsWith(".css")) return "text/css";
   else if (filename.endsWith(".js")) return "application/javascript";
   else if (filename.endsWith(".ico")) return "image/x-icon";
+  else if (filename.endsWith(".js")) return "application/json";
   return "text/plain";
 }
 
