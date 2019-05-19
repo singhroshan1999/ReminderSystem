@@ -2,7 +2,7 @@
 Timer t;
 int stopWatchID = -3;
 static long stopWatchCount = 0;
-bool isPausedStopwatchFlag = false;
+int isPausedStopwatchFlag = 0;
 
 int setMemoID = -3;
 String memoMsg = "";
@@ -10,10 +10,10 @@ String memoMsg = "";
 
 
 void toggleStopWatch();
-long getStopwatch();
+void getStopwatch();
 long getStopwatchCount();
 void togglePauseStopwatch();
-bool isPausedStopwatch();
+void isPausedStopwatch();
 //void unSetStopWatch();
 void stopWatchTick();
 
@@ -31,7 +31,7 @@ void setup() {
  Serial.setTimeout(10);
 toggleStopWatch();
 delay(1000);
-Serial.println(getStopwatch());
+//Serial.println(getStopwatch());
 DEB_t = millis();
 pinMode(LED_BUILTIN,OUTPUT);
 //setMemo("1","hello memo!");
@@ -39,12 +39,12 @@ pinMode(LED_BUILTIN,OUTPUT);
 
 void loop() {
 
-if(millis()-DEB_t >1000){
-DEB_t = millis();
-Serial.print("--");
-Serial.println(millis());
-Serial.println(getStopwatch());
-}
+//if(millis()-DEB_t >1000){
+//DEB_t = millis();
+//Serial.print("--");
+//Serial.println(millis());
+//Serial.println(getStopwatch());
+//}
 t.update();
 //delay(500);
 }
@@ -60,8 +60,11 @@ void toggleStopWatch(){
     stopWatchID = t.every(1000,stopWatchTick,(void*)1);
   }
   }
-long getStopwatch(){
-  return stopWatchCount;
+
+void getStopwatch(){
+  Serial.print(String("Z")+String(stopWatchCount));
+  Serial.flush();
+//  return stopWatchCount;
   }
 long getStopwatchCount(){  // TODO: redundant
   return stopWatchCount;
@@ -70,16 +73,18 @@ void togglePauseStopwatch(){
     if(stopWatchID >=0){
     t.stop(stopWatchID);
     stopWatchID = -3;
-    isPausedStopwatchFlag = true;
+    isPausedStopwatchFlag = 1;
 //    stopWatchCount = 0;  // just store count
   } else {
 //    Serial.println("TPS");
-    isPausedStopwatchFlag = false;
+    isPausedStopwatchFlag = 0;
     stopWatchID = t.every(1000,stopWatchTick,(void*)1);
   }
   }
-bool isPausedStopwatch(){
-  return isPausedStopwatchFlag;
+void isPausedStopwatch(){
+  Serial.print(String("X")+String(isPausedStopwatchFlag));
+  Serial.flush();
+//  return isPausedStopwatchFlag;
   }
 //void unSetStopWatch(){}
 
@@ -118,7 +123,7 @@ void serialEvent(){
   digitalWrite(LED_BUILTIN,!digitalRead(LED_BUILTIN));
 //  char s = (char)Serial.read();
   String st = Serial.readString();
-  Serial.println(st);
+//  Serial.println(st);
   char s = st[0];
   st.remove(0,1);
   
@@ -126,11 +131,11 @@ void serialEvent(){
   if(s == 'A'){
     toggleStopWatch();
   } else if( s == 'B'){
-    Serial.println(getStopwatch());
+    getStopwatch(); // mark
 } else if( s == 'C'){
     togglePauseStopwatch();
 } else if( s == 'D'){
-    Serial.println(isPausedStopwatch());
+    isPausedStopwatch();  // mark
 } else if( s == 'E'){
     String msg = st.substring(st.indexOf("~`")+2);
     st.remove(st.indexOf("~`"));
@@ -139,7 +144,7 @@ void serialEvent(){
 } else if( s == 'F'){
     unSetMemo();
 } else if( s == 'G'){
-    displayNotification(st);
+    displayNotification(st);  //mark2
 }
 
 }
