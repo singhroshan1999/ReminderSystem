@@ -20,10 +20,11 @@ WiFiUDP udp;
 
 unsigned long MILLIS,MILLIS2;
 
-long alarms[10];
-int alarmTaken = 0;
-long alarmsR[10];
-int alarmTakenR = 0;
+//long alarms[10];
+//int alarmTaken = 0;
+//long alarmsR[10];
+//int alarmTakenR = 0;
+long alarm = 0;
 
 ESP8266WebServer server(80);
 
@@ -72,14 +73,14 @@ void loop() {
     serialEvent();
     MILLIS = millis();
   }
-  if(millis() - MILLIS2 > 10000){
-    alarmPoll();
+  if(millis() - MILLIS2 > 5000){
+//    alarmPoll();
     getNTPTime();
-//    for(int i = 0;i<alarmTakenR;i++) Serial.println(alarmsR[i]);
-Serial.println(alarmsR[0]);
-//    Serial.println(alarmTakenR);
-//    Serial.println(sizeof(alarmsR)/sizeof(unsigned long));
-    Serial.println("---");
+////    for(int i = 0;i<alarmTakenR;i++) Serial.println(alarmsR[i]);
+//Serial.println(alarmsR[0]);
+////    Serial.println(alarmTakenR);
+////    Serial.println(sizeof(alarmsR)/sizeof(unsigned long));
+//    Serial.println("---");
     Serial.println(timeArray[0]);
     Serial.println(timeArray[1]);
     Serial.println(timeArray[2]);
@@ -246,38 +247,38 @@ bool isPausedStopwatch(){
   Serial.flush();
   return true;
   }
-
-int setAlarm(String hh,String mm,String isAM,String msg,String repeat){
-  int hr = hh.toInt();
-  int mn = mm.toInt();
-  int totalMn = hr*60+mn;
-  Serial.println("setAlarm0");
-  if(repeat == "true"){
-    Serial.println("setAlarm1");
-    if(alarmTakenR >10) return 1;
-    Serial.println("setAlarm11");
-    alarmsR[alarmTakenR] = totalMn*60;
-    alarmTakenR++;
-    selectionSort(alarmsR,alarmTakenR);
-    printArray(alarmsR,alarmTakenR);
-  }else if(totalMn > timeArray[0]*60+timeArray[1]){
-    if(repeat == "true"){
-    if(alarmTakenR >10) return 1;
-    Serial.println("setAlarm2");
-    alarmsR[alarmTakenR] = totalMn*60;
-    alarmTakenR++;      
-    selectionSort(alarmsR,alarmTakenR);
-    printArray(alarmsR,alarmTakenR);
-    }else {
-    if(alarmTaken >10) return 1;
-    Serial.println("setAlarm3");
-    alarms[alarmTaken] = totalMn*60;
-    alarmTaken++;
-    selectionSort(alarms,alarmTaken);
-    printArray(alarms,alarmTaken);
-    }
-  }
-  return 0;}
+//
+//int setAlarm(String hh,String mm,String isAM,String msg,String repeat){
+//  int hr = hh.toInt();
+//  int mn = mm.toInt();
+//  int totalMn = hr*60+mn;
+//  Serial.println("setAlarm0");
+//  if(repeat == "true"){
+//    Serial.println("setAlarm1");
+//    if(alarmTakenR >10) return 1;
+//    Serial.println("setAlarm11");
+//    alarmsR[alarmTakenR] = totalMn*60;
+//    alarmTakenR++;
+//    selectionSort(alarmsR,alarmTakenR);
+//    printArray(alarmsR,alarmTakenR);
+//  }else if(totalMn > timeArray[0]*60+timeArray[1]){
+//    if(repeat == "true"){
+//    if(alarmTakenR >10) return 1;
+//    Serial.println("setAlarm2");
+//    alarmsR[alarmTakenR] = totalMn*60;
+//    alarmTakenR++;      
+//    selectionSort(alarmsR,alarmTakenR);
+//    printArray(alarmsR,alarmTakenR);
+//    }else {
+//    if(alarmTaken >10) return 1;
+//    Serial.println("setAlarm3");
+//    alarms[alarmTaken] = totalMn*60;
+//    alarmTaken++;
+//    selectionSort(alarms,alarmTaken);
+//    printArray(alarms,alarmTaken);
+//    }
+//  }
+//  return 0;}
 void unSetAlarm(String b){}
 
 void serialEvent(){
@@ -321,29 +322,29 @@ void selectionSort(long arr[], int n)
         swap(&arr[min_idx], &arr[i]); 
     } 
 } 
-
-void alarmPoll(){
-  if(alarmTaken == 0 && alarmTakenR == 0){
-    return;
-  }else{
-    if(alarmTaken == 0 && alarmsR[alarmTakenR-1] - (timeArray[0]*60+timeArray[1])*60 > 10){
-      Serial.print(String("E")+String(alarmsR[alarmTakenR-1] - (timeArray[0]*60+timeArray[1])*60)+String("~`")+String("NoMsg"));
-      alarmsR[alarmTakenR] = 99999999;
-      selectionSort(alarmsR,alarmTakenR);
-      printArray(alarmsR,alarmTakenR);
-      alarmTakenR--;
-      return;
-        }
-    if(alarmTakenR == 0 && alarms[alarmTaken-1] - (timeArray[0]*60+timeArray[1])*60 > 10){
-      Serial.print(String("E")+String(alarms[alarmTaken-1] - (timeArray[0]*60+timeArray[1])*60)+String("~`")+String("NoMsg"));
-      alarms[alarmTaken] = 99999999;
-      selectionSort(alarms,alarmTaken);
-      printArray(alarms,alarmTaken);      
-      alarmTaken--;
-      return;
-        }     
-  }
-}
+//
+//void alarmPoll(){
+//  if(alarmTaken == 0 && alarmTakenR == 0){
+//    return;
+//  }else{
+//    if(alarmTaken == 0 && alarmsR[alarmTakenR-1] - (timeArray[0]*60+timeArray[1])*60 > 10){
+//      Serial.print(String("E")+String(alarmsR[alarmTakenR-1] - (timeArray[0]*60+timeArray[1])*60)+String("~`")+String("NoMsg"));
+//      alarmsR[alarmTakenR] = 99999999;
+//      selectionSort(alarmsR,alarmTakenR);
+//      printArray(alarmsR,alarmTakenR);
+//      alarmTakenR--;
+//      return;
+//        }
+//    if(alarmTakenR == 0 && alarms[alarmTaken-1] - (timeArray[0]*60+timeArray[1])*60 > 10){
+//      Serial.print(String("E")+String(alarms[alarmTaken-1] - (timeArray[0]*60+timeArray[1])*60)+String("~`")+String("NoMsg"));
+//      alarms[alarmTaken] = 99999999;
+//      selectionSort(alarms,alarmTaken);
+//      printArray(alarms,alarmTaken);      
+//      alarmTaken--;
+//      return;
+//        }     
+//  }
+//}
 
 void printArray(long arr[], int sizee) 
 { 
@@ -352,3 +353,13 @@ void printArray(long arr[], int sizee)
         Serial.print(arr[i]); 
     Serial.println("\n"); 
 } 
+
+int setAlarm(String hh,String mm,String isAM,String msg,String repeat){
+  int hr = hh.toInt();
+  int mn = mm.toInt();
+  long totalMn = hr*60L+mn;
+  alarm = totalMn;
+  Serial.println(alarm);
+  Serial.println(timeArray[0]*60+timeArray[1]);
+ return 0;
+}
